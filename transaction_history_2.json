@@ -1,0 +1,72 @@
+[
+  {
+    "date": "Sat Jul 20 22:32:46 BRT 2024",
+    "type": "Withdrawal",
+    "amount": 276.39,
+    "balance_after_transaction": 723.61,
+    "error": false
+  },
+  {
+    "date": "Sat Jul 20 22:32:46 BRT 2024",
+    "type": "Withdrawal",
+    "amount": 336.81,
+    "balance_after_transaction": 386.8,
+    "error": false
+  },
+  {
+    "date": "Sat Jul 20 22:32:47 BRT 2024",
+    "type": "Withdrawal",
+    "amount": 34.5,
+    "balance_after_transaction": 352.3,
+    "error": false
+  },
+  {
+    "date": "Sat Jul 20 22:32:47 BRT 2024",
+    "type": "Withdrawal",
+    "amount": 88.67,
+    "balance_after_transaction": 263.63,
+    "error": false
+  },
+  {
+    "date": "Sat Jul 20 22:32:48 BRT 2024",
+    "type": "Deposit",
+    "amount": 520.44,
+    "balance_after_transaction": 784.07,
+    "error": false
+  },
+  {
+    "date": "Sat Jul 20 22:32:50 BRT 2024",
+    "type": "Withdrawal",
+    "amount": 610.16,
+    "balance_after_transaction": 173.91,
+    "error": false
+  },
+  {
+    "date": "Sat Jul 20 22:32:50 BRT 2024",
+    "type": "Deposit",
+    "amount": 239.98,
+    "balance_after_transaction": 413.88,
+    "error": false
+  },
+  {
+    "date": "Sat Jul 20 22:32:50 BRT 2024",
+    "type": "Deposit",
+    "amount": 23.68,
+    "balance_after_transaction": 437.56,
+    "error": false
+  },
+  {
+    "date": "Sat Jul 20 22:32:50 BRT 2024",
+    "type": "Deposit",
+    "amount": 198.78,
+    "balance_after_transaction": 636.34,
+    "error": false
+  },
+  {
+    "date": "Sat Jul 20 22:32:51 BRT 2024",
+    "type": "Withdrawal",
+    "amount": 632.47,
+    "balance_after_transaction": 3.87,
+    "error": false
+  }
+]

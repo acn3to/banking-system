@@ -7,8 +7,9 @@ import com.acn3to.threads.CustomerThread;
 public class Main {
     public static void main(String[] args) {
         Bank bank = new Bank();
+
         for (int i = 0; i < 5; i++) {
-            Account account = new Account(1000);
+            Account account = new Account(1000, i + 1);
             bank.addAccount(account);
         }
 
