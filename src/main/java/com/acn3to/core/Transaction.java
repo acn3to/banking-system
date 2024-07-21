@@ -3,17 +3,11 @@ package com.acn3to.core;
 import java.util.Date;
 
 /**
- * Represents a transaction in a bank account.
+ * Represents a financial transaction.
+ *
+ * @param date the date and time of the transaction
+ * @param type the type of the transaction (e.g., Deposit, Withdrawal)
+ * @param amount the amount of money involved in the transaction
+ * @param balanceAfterTransaction the balance of the account after the transaction
  */
-public record Transaction(Date date, String type, double amount, double balanceAfterTransaction) {
-    /**
-     * Constructs a Transaction with the specified details.
-     *
-     * @param date                    the date of the transaction
-     * @param type                    the type of the transaction (Deposit or Withdraw)
-     * @param amount                  the amount of money involved in the transaction
-     * @param balanceAfterTransaction the account balance after the transaction
-     */
-    public Transaction {
-    }
-}
+public record Transaction(Date date, String type, double amount, double balanceAfterTransaction) {}
