@@ -31,8 +31,9 @@ public class BankService {
      * @param account the account to add
      */
     public void addAccount(Account account) {
-        accountRepository.save(account);
-        System.out.println("Created new account with ID: " + account.getAccountId());
+        if (account != null) {
+            accountRepository.save(account);
+        }
     }
 
     /**
@@ -60,8 +61,9 @@ public class BankService {
      * @param agency the bank agency to add
      */
     public void addBankAgency(BankAgency agency) {
-        bankAgencyRepository.save(agency);
-        System.out.println("Created new bank agency with ID: " + agency.getAgencyId());
+        if (agency != null) {
+            bankAgencyRepository.save(agency);
+        }
     }
 
     /**

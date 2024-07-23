@@ -78,7 +78,6 @@ public class AccountService {
         return account != null ? account.getBalance() : 0;
     }
 
-
     /**
      * Retrieves the TransactionLogger instance used by the service.
      *

@@ -2,24 +2,17 @@ package com.acn3to.core.services;
 
 import com.acn3to.core.entities.Transaction;
 import com.acn3to.core.repositories.TransactionRepository;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * Logs transactions to a MongoDB collection using a repository.
  * <p>
- * This class formats transaction details and stores them in a MongoDB collection for persistent record-keeping.
+ * This class stores transaction details in a MongoDB collection for persistent record-keeping.
  * </p>
  */
 public class TransactionLogger {
     private final TransactionRepository transactionRepository;
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.getDefault());
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     /**
      * Constructs a TransactionLogger with a specified TransactionRepository.
@@ -48,14 +41,6 @@ public class TransactionLogger {
                 newBalance
         );
 
-        JsonObject transactionJson = new JsonObject();
-        transactionJson.addProperty("account_id", transaction.accountId());
-        transactionJson.addProperty("date", dateFormat.format(transaction.date()));
-        transactionJson.addProperty("type", transaction.type());
-        transactionJson.addProperty("amount", Double.parseDouble(String.format(Locale.US, "%.2f", transaction.amount())));
-        transactionJson.addProperty("balance_after_transaction", Double.parseDouble(String.format(Locale.US, "%.2f", transaction.balanceAfterTransaction())));
-        transactionJson.addProperty("error", error);
-
-        transactionRepository.save(transactionJson);
+        transactionRepository.save(transaction);
     }
 }
