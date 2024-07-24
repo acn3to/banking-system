@@ -1,0 +1,39 @@
+services:
+  app:
+    build: .
+    container_name: app
+    depends_on:
+      - mongodb
+    environment:
+      MONGO_URI: mongodb://mongodb:27017/bank
+    ports:
+      - 8080:8080
+    networks:
+      - network
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - 27018:27017
+    networks:
+      - network
+
+  metabase:
+    image: metabase/metabase:latest
+    container_name: metabase
+    depends_on:
+      - mongodb
+    ports:
+      - 3000:3000
+    networks:
+      - network
+    healthcheck:
+      test: curl --fail -I http://localhost:3000/api/health || exit 1
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+networks:
+  network:
+    driver: bridge
