@@ -3,6 +3,8 @@ package com.acn3to.core.services;
 import com.acn3to.core.entities.Transaction;
 import com.acn3to.core.repositories.TransactionRepository;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 
 /**
@@ -32,13 +34,16 @@ public class TransactionLogger {
      * @param newBalance       the balance after the transaction
      * @param error            indicates if the transaction failed
      */
-    public void logTransaction(int accountId, String transactionType, double amount, double newBalance, boolean error) {
+    public synchronized void logTransaction(int accountId, String transactionType, double amount, double newBalance, boolean error) {
+        BigDecimal formattedAmount = BigDecimal.valueOf(amount).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal formattedBalance = BigDecimal.valueOf(newBalance).setScale(2, RoundingMode.HALF_UP);
+
         Transaction transaction = new Transaction(
                 accountId,
                 new Date(),
                 transactionType,
-                amount,
-                newBalance
+                formattedAmount.doubleValue(),
+                formattedBalance.doubleValue()
         );
 
         transactionRepository.save(transaction);

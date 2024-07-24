@@ -28,17 +28,12 @@ public class AccountService {
      * @param accountId the ID of the account to deposit into
      * @param amount    the amount to deposit
      */
-    public void deposit(int accountId, double amount) {
+    public synchronized void deposit(int accountId, double amount) {
         Account account = accountRepository.findById(accountId);
         if (account != null) {
-            synchronized (account) {
-                double newBalance = account.getBalance() + amount;
-                account.setBalance(newBalance);
-                accountRepository.save(account);
-                transactionLogger.logTransaction(accountId, "Deposit", amount, newBalance, false);
-            }
-        } else {
-            transactionLogger.logTransaction(accountId, "Deposit failed", amount, 0, true);
+            double newBalance = account.getBalance() + amount;
+            account.setBalance(newBalance);
+            accountRepository.save(account);
         }
     }
 
@@ -49,21 +44,14 @@ public class AccountService {
      * @param accountId the ID of the account to withdraw from
      * @param amount    the amount to withdraw
      */
-    public void withdraw(int accountId, double amount) {
+    public synchronized void withdraw(int accountId, double amount) {
         Account account = accountRepository.findById(accountId);
         if (account != null) {
-            synchronized (account) {
-                if (amount <= account.getBalance()) {
-                    double newBalance = account.getBalance() - amount;
-                    account.setBalance(newBalance);
-                    accountRepository.save(account);
-                    transactionLogger.logTransaction(accountId, "Withdrawal", amount, newBalance, false);
-                } else {
-                    transactionLogger.logTransaction(accountId, "Withdrawal failed", amount, account.getBalance(), true);
-                }
+            if (amount <= account.getBalance()) {
+                double newBalance = account.getBalance() - amount;
+                account.setBalance(newBalance);
+                accountRepository.save(account);
             }
-        } else {
-            transactionLogger.logTransaction(accountId, "Withdrawal failed", amount, 0, true);
         }
     }
 
