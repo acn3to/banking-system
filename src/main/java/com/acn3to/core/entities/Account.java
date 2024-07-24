@@ -69,13 +69,12 @@ public class Account {
     }
 
     public Date getCreationDate() {
-        return creationDate;
+        return new Date(creationDate.getTime());
     }
 
     public Date getLastUpdatedDate() {
-        return lastUpdatedDate;
+        return new Date(lastUpdatedDate.getTime());
     }
-
 
     private void updateLastUpdatedDate() {
         this.lastUpdatedDate = new Date();
