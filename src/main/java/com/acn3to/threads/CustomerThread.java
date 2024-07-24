@@ -5,22 +5,22 @@ import com.acn3to.core.services.AccountService;
 import java.util.Random;
 
 public class CustomerThread extends Thread {
-    private static final int TRANSACTIONS_PER_THREAD = 10;
-
     private final int accountId;
+    private final int transactionsPerThread;
     private final Random random = new Random();
     private final AccountService accountService;
 
-    public CustomerThread(int accountId, AccountService accountService) {
+    public CustomerThread(int accountId, AccountService accountService, int transactionsPerThread) {
         this.accountId = accountId;
         this.accountService = accountService;
+        this.transactionsPerThread = transactionsPerThread;
         setName("AccountThread-" + accountId);
     }
 
     @Override
     public void run() {
         try {
-            for (int i = 0; i < TRANSACTIONS_PER_THREAD; i++) {
+            for (int i = 0; i < transactionsPerThread; i++) {
                 double amount = random.nextDouble() * 1000;
                 boolean error = false;
                 String transactionType;

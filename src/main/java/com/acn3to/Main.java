@@ -1,47 +1,93 @@
 package com.acn3to;
 
-import com.acn3to.core.Account;
-import com.acn3to.core.Bank;
+import java.util.Date;
+import java.util.Random;
+
+import com.acn3to.core.entities.Account;
+import com.acn3to.core.entities.BankAgency;
+import com.acn3to.core.services.AccountService;
+import com.acn3to.core.services.BankService;
+import com.acn3to.core.services.TransactionLogger;
+import com.acn3to.core.repositories.AccountRepository;
+import com.acn3to.core.repositories.BankAgencyRepository;
+import com.acn3to.core.repositories.TransactionRepository;
+import com.acn3to.core.utils.MongoDBConnection;
 import com.acn3to.threads.CustomerThread;
+import com.mongodb.client.MongoDatabase;
 
-/**
- * The main entry point for the banking system application.
- * This class initializes the banking system by creating a {@link Bank}
- * instance and adding several {@link Account} objects to it. It then
- * starts multiple {@link CustomerThread}s to simulate concurrent transactions.
- * The main method is responsible for setting up and running the application.
- */
 public class Main {
-    /**
-     * The main method that starts the banking system application.
-     * <ul>
-     *   <li>Initializes a {@link Bank} instance.</li>
-     *   <li>Creates and adds 5 {@link Account} objects to the bank.</li>
-     *   <li>Starts 5 {@link CustomerThread}s to perform transactions concurrently.</li>
-     *   <li>Waits for all threads to complete their execution.</li>
-     * </ul>
-     *
-     * @param args command-line arguments (not used)
-     */
+    private static final int NUMBER_OF_ACCOUNTS = 10;
+    private static final int NUMBER_OF_BANK_AGENCIES = 5;
+    private static final int NUMBER_OF_THREADS = 10;
+    private static final int TRANSACTIONS_PER_THREAD = 10;
+
+    // Coordinates for New York
+    private static final double BASE_LATITUDE = 40.7128;
+    private static final double BASE_LONGITUDE = -74.0060;
+    private static final double RADIUS = 0.1;
+
     public static void main(String[] args) {
-        Bank bank = new Bank();
+        MongoDatabase database = null;
+        try {
+            database = MongoDBConnection.getDatabase();
+            Random random = new Random();
 
-        for (int i = 0; i < 5; i++) {
-            Account account = new Account(1000, i + 1);
-            bank.addAccount(account);
-        }
+            AccountRepository accountRepository = new AccountRepository(database);
+            TransactionRepository transactionRepository = new TransactionRepository(database);
+            BankAgencyRepository bankAgencyRepository = new BankAgencyRepository(database);
 
-        Thread[] threads = new Thread[5];
-        for (int i = 0; i < 5; i++) {
-            threads[i] = new CustomerThread(bank, i + 1);
-            threads[i].start();
-        }
+            TransactionLogger transactionLogger = new TransactionLogger(transactionRepository);
+            AccountService accountService = new AccountService(accountRepository, transactionLogger);
+            BankService bankService = new BankService(accountRepository, bankAgencyRepository);
 
-        for (int i = 0; i < 5; i++) {
-            try {
-                threads[i].join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            for (int i = 0; i < NUMBER_OF_BANK_AGENCIES; i++) {
+                String agencyId = "Agency-" + (i + 1);
+                double randomLatitude = BASE_LATITUDE + (random.nextDouble() * 2 - 1) * RADIUS;
+                double randomLongitude = BASE_LONGITUDE + (random.nextDouble() * 2 - 1) * RADIUS;
+                BankAgency agency = new BankAgency(
+                        agencyId,
+                        randomLatitude,
+                        randomLongitude,
+                        "Address " + (i + 1),
+                        "Phone " + (i + 1),
+                        "Manager " + (i + 1),
+                        new Date(),
+                        "Open"
+                );
+                bankService.addBankAgency(agency);
+            }
+
+            for (int i = 0; i < NUMBER_OF_ACCOUNTS; i++) {
+                Account account = new Account(
+                        1000.0,
+                        i + 1,
+                        "Account Holder " + (i + 1),
+                        "Savings",
+                        "Active",
+                        new Date()
+                );
+                bankService.addAccount(account);
+            }
+
+            Thread[] threads = new Thread[NUMBER_OF_THREADS];
+            for (int i = 0; i < NUMBER_OF_THREADS; i++) {
+                threads[i] = new CustomerThread((i % NUMBER_OF_ACCOUNTS) + 1, accountService, TRANSACTIONS_PER_THREAD);
+                threads[i].start();
+            }
+
+            for (int i = 0; i < NUMBER_OF_THREADS; i++) {
+                try {
+                    threads[i].join();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (database != null) {
+                MongoDBConnection.close();
             }
         }
     }
