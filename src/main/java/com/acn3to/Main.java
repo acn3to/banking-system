@@ -2,6 +2,7 @@ package com.acn3to;
 
 import java.util.Date;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.acn3to.core.entities.Account;
 import com.acn3to.core.entities.BankAgency;
@@ -58,13 +59,16 @@ public class Main {
             }
 
             for (int i = 0; i < NUMBER_OF_ACCOUNTS; i++) {
+                String accountStatus = random.nextBoolean() ? "Active" : "Inactive";
+                Date creationDate = generateRandomDate(random);
+
                 Account account = new Account(
-                        1000.0,
+                        500.0 + random.nextDouble() * 1500.0,
                         i + 1,
                         "Account Holder " + (i + 1),
                         "Savings",
-                        "Active",
-                        new Date()
+                        accountStatus,
+                        creationDate
                 );
                 bankService.addAccount(account);
             }
@@ -90,5 +94,11 @@ public class Main {
                 MongoDBConnection.close();
             }
         }
+    }
+
+    private static Date generateRandomDate(Random random) {
+        long currentTimeMillis = System.currentTimeMillis();
+        long randomTimeMillis = ThreadLocalRandom.current().nextLong(currentTimeMillis - 31556952000L, currentTimeMillis);
+        return new Date(randomTimeMillis);
     }
 }
