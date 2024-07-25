@@ -22,10 +22,11 @@ public class Main {
     private static final int NUMBER_OF_THREADS = 100;
     private static final int TRANSACTIONS_PER_THREAD = 10;
 
-    // Coordinates for Salvador
-    private static final double BASE_LATITUDE = -12.9704;
-    private static final double BASE_LONGITUDE = -38.5124;
-    private static final double RADIUS = 0.4;
+    // Coordinates range for Salvador
+    private static final double MIN_LATITUDE = -13.0500;
+    private static final double MAX_LATITUDE = -12.9500;
+    private static final double MIN_LONGITUDE = -38.6000;
+    private static final double MAX_LONGITUDE = -38.4000;
 
     public static void main(String[] args) {
         MongoDatabase database = null;
@@ -43,8 +44,8 @@ public class Main {
 
             for (int i = 0; i < NUMBER_OF_BANK_AGENCIES; i++) {
                 String agencyId = "Agency-" + (i + 1);
-                double randomLatitude = BASE_LATITUDE + (random.nextDouble() * 2 - 1) * RADIUS;
-                double randomLongitude = BASE_LONGITUDE + (random.nextDouble() * 2 - 1) * RADIUS;
+                double randomLatitude = MIN_LATITUDE + (random.nextDouble() * (MAX_LATITUDE - MIN_LATITUDE));
+                double randomLongitude = MIN_LONGITUDE + (random.nextDouble() * (MAX_LONGITUDE - MIN_LONGITUDE));
                 Date randomDate = generateRandomDate(random);
                 String agencyStatus = random.nextBoolean() ? "Open" : "Closed";
                 BankAgency agency = new BankAgency(
