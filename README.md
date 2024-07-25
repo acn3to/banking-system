@@ -67,6 +67,16 @@ docker exec -it mongodb mongosh
 
 After starting the Docker containers, access Metabase at http://localhost:3000 to visualize and analyze data.
 
+## Deploy
+
+You can also access the deployed Metabase instance on AWS to visualize and analyze data. Here are the details:
+- URL: http://ec2-54-146-93-64.compute-1.amazonaws.com
+- Login: test.user.metabase@gmail.com
+- Password: u0efs5jr1z
+    
+> Feel free to explore the dashboards and play with the data generated. Metabase provides an intuitive interface for creating custom queries and visualizations, making it easy to gain insights and analyze the banking system's data.
+
+
 ## Nginx Configuration
 
 ### EC2 Instance (Reverse Proxy)
