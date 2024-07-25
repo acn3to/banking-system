@@ -17,15 +17,15 @@ import com.acn3to.threads.CustomerThread;
 import com.mongodb.client.MongoDatabase;
 
 public class Main {
-    private static final int NUMBER_OF_ACCOUNTS = 10;
+    private static final int NUMBER_OF_ACCOUNTS = 100;
     private static final int NUMBER_OF_BANK_AGENCIES = 5;
-    private static final int NUMBER_OF_THREADS = 10;
+    private static final int NUMBER_OF_THREADS = 100;
     private static final int TRANSACTIONS_PER_THREAD = 10;
 
-    // Coordinates for New York
-    private static final double BASE_LATITUDE = 40.7128;
-    private static final double BASE_LONGITUDE = -74.0060;
-    private static final double RADIUS = 0.1;
+    // Coordinates for Salvador
+    private static final double BASE_LATITUDE = -12.9704;
+    private static final double BASE_LONGITUDE = -38.5124;
+    private static final double RADIUS = 0.4;
 
     public static void main(String[] args) {
         MongoDatabase database = null;
@@ -45,6 +45,8 @@ public class Main {
                 String agencyId = "Agency-" + (i + 1);
                 double randomLatitude = BASE_LATITUDE + (random.nextDouble() * 2 - 1) * RADIUS;
                 double randomLongitude = BASE_LONGITUDE + (random.nextDouble() * 2 - 1) * RADIUS;
+                Date randomDate = generateRandomDate(random);
+                String agencyStatus = random.nextBoolean() ? "Open" : "Closed";
                 BankAgency agency = new BankAgency(
                         agencyId,
                         randomLatitude,
@@ -52,8 +54,8 @@ public class Main {
                         "Address " + (i + 1),
                         "Phone " + (i + 1),
                         "Manager " + (i + 1),
-                        new Date(),
-                        "Open"
+                        randomDate,
+                        agencyStatus
                 );
                 bankService.addBankAgency(agency);
             }
