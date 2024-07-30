@@ -18,14 +18,15 @@ This documentation provides detailed information on setting up and configuring a
 Before setting up and running the project, you might want to adjust certain parameters in the Main class. These parameters control various aspects of the application, such as the number of accounts, bank agencies, threads, and transactions, as well as geographical coordinates for data initialization.
 ```java
     private static final int NUMBER_OF_ACCOUNTS = 10;
-    private static final int NUMBER_OF_BANK_AGENCIES = 5;
-    private static final int NUMBER_OF_THREADS = 10;
-    private static final int TRANSACTIONS_PER_THREAD = 10;
+private static final int NUMBER_OF_BANK_AGENCIES = 5;
+private static final int NUMBER_OF_THREADS = 10;
+private static final int TRANSACTIONS_PER_THREAD = 10;
 
-    // Coordinates for New York
-    private static final double BASE_LATITUDE = 40.7128;
-    private static final double BASE_LONGITUDE = -74.0060;
-    private static final double RADIUS = 0.1;
+// Coordinates range for Salvador - Bahia
+private static final double MIN_LATITUDE = -13.0500;
+private static final double MAX_LATITUDE = -12.9500;
+private static final double MIN_LONGITUDE = -38.6000;
+private static final double MAX_LONGITUDE = -38.4000;
 ```
 
 ## Setup Instructions
@@ -42,7 +43,7 @@ cd banking-system
 
 #### Build the Project
 
-- Before running the application, build the project and package it into a JAR file. 
+- Before running the application, build the project and package it into a JAR file.
 - Ensure you have Maven installed to run the following command:
 ```shell
 mvn clean package
@@ -73,9 +74,12 @@ You can also access the deployed Metabase instance on AWS to visualize and analy
 - URL: http://ec2-54-146-93-64.compute-1.amazonaws.com
 - Login: test.user.metabase@gmail.com
 - Password: u0efs5jr1z
-    
+
 > Feel free to explore the dashboards and play with the data generated. Metabase provides an intuitive interface for creating custom queries and visualizations, making it easy to gain insights and analyze the banking system's data.
 
+![Metabase Screenshot](https://i.postimg.cc/wMhTYPxH/Screenshot-from-2024-07-25-20-03-17.png)
+
+Here is a sharable link for this dashboard: [Access Dashboard](http://ec2-54-146-93-64.compute-1.amazonaws.com/public/dashboard/de36f4cd-c920-4bde-9895-51890b160420)
 
 ## Nginx Configuration
 
@@ -90,7 +94,7 @@ server {
     server_name _;
 
     location / {
-        proxy_pass http://your-lightsail-instance-ip;
+        proxy_pass http://your-lightsail-instance-ip:3000;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -102,28 +106,6 @@ server {
 }
 ```
 
-### Lightsail Instance (App, Metabase and MongoDB)
-
-The Nginx configuration on the Lightsail instance for Metabase:
-```
-server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-
-    server_name your-lightsail-instance-ip;
-
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-
-    root /var/www/html;
-    index index.html index.htm;
-}
-```
 ### Note
 > The Lightsail instance hosting the application is configured to be accessible only from the EC2 instance IP for security reasons. Ensure that your EC2 instance IP is whitelisted in the Lightsail instance settings to allow communication between the two instances.
 
@@ -139,13 +121,13 @@ server {
 
 ### 3. Improve AWS Deployment Documentation
 - [ ] Create detailed documentation for deploying the application on AWS, including:
-    - **Setting up EC2 instances**: Step-by-step instructions for launching and configuring EC2 instances.
-    - **Configuring Nginx**: How to configure Nginx as a reverse proxy for the application.
-    - **Deploying Docker Containers**: Instructions for deploying Docker containers on EC2.
-    - **Setting up RDS for PostgreSQL**: How to set up and connect to PostgreSQL RDS.
-    - **Configuring Security Groups**: Steps for setting up appropriate security groups and firewall rules.
-    - **Setting up Load Balancers**: How to configure AWS Elastic Load Balancing for your application.
-    - **Automating Deployment with Elastic Beanstalk**: Instructions for using AWS Elastic Beanstalk for application deployment and management.
+  - **Setting up EC2 instances**: Step-by-step instructions for launching and configuring EC2 instances.
+  - **Configuring Nginx**: How to configure Nginx as a reverse proxy for the application.
+  - **Deploying Docker Containers**: Instructions for deploying Docker containers on EC2.
+  - **Setting up RDS for PostgreSQL**: How to set up and connect to PostgreSQL RDS.
+  - **Configuring Security Groups**: Steps for setting up appropriate security groups and firewall rules.
+  - **Setting up Load Balancers**: How to configure AWS Elastic Load Balancing for your application.
+  - **Automating Deployment with Elastic Beanstalk**: Instructions for using AWS Elastic Beanstalk for application deployment and management.
 
 ### 4. Testing and Quality Assurance
 - [ ] Implement unit tests and integration tests for the new Spring Boot application.
@@ -162,10 +144,10 @@ server {
 
 ### 7. Implement Microservices Architecture
 - [ ] Decompose the monolithic banking application into microservices, such as:
-    - **Account Service**: Manages user accounts.
-    - **Transaction Service**: Handles transaction processing.
-    - **Bank Agency Service**: Manages bank agency data.
-    - **Payment Service**: Integrates with payment APIs.
+  - **Account Service**: Manages user accounts.
+  - **Transaction Service**: Handles transaction processing.
+  - **Bank Agency Service**: Manages bank agency data.
+  - **Payment Service**: Integrates with payment APIs.
 - [ ] Define clear API contracts for inter-service communication.
 - [ ] Implement service discovery (e.g., using Eureka or Consul) for locating and managing microservices.
 - [ ] Configure API Gateway (e.g., using Spring Cloud Gateway) for routing and aggregating requests.
