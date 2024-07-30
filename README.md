@@ -17,7 +17,7 @@ This documentation provides detailed information on setting up and configuring a
 
 Before setting up and running the project, you might want to adjust certain parameters in the Main class. These parameters control various aspects of the application, such as the number of accounts, bank agencies, threads, and transactions, as well as geographical coordinates for data initialization.
 ```java
-    private static final int NUMBER_OF_ACCOUNTS = 10;
+private static final int NUMBER_OF_ACCOUNTS = 10;
 private static final int NUMBER_OF_BANK_AGENCIES = 5;
 private static final int NUMBER_OF_THREADS = 10;
 private static final int TRANSACTIONS_PER_THREAD = 10;
